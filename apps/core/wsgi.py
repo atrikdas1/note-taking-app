@@ -15,6 +15,7 @@ gevent.monkey.patch_all()
 
 import gunicorn.app.base
 import multiprocessing
+from core.utils import alembic_upgrade_to_head
 
 # Gunicorn ‘Green Unicorn’ is a Python WSGI HTTP Server for UNIX
 # Format is copy-pasted from: https://docs.gunicorn.org/en/stable/custom.html
@@ -51,6 +52,9 @@ if __name__ == "__main__":
     from core.app import create_app
 
     application = create_app()
+
+    # Make sure database is running the latest alembic revision
+    alembic_upgrade_to_head()
 
     options = {
         "print_config": True,
