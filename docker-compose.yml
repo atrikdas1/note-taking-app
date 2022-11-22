@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  # Chosing an alpine image because of its small image size thereby saving memory
+  note-taker-db:
+    image: postgres:12.3-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - note-taker-db_data:/var/lib/postgresql/data/
+
+  note-taker-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.http
+      args:
+        timezone: Asia/Singapore
+    depends_on:
+      - note-taker-db
+    ports:
+      - "9700:9700"
+      - "9800:9800"
+    environment:
+      - TESTING=1
+      - NOTE_TAKER_DB_USER=postgres
+      - NOTE_TAKER_DB_PASSWORD=postgres
+      - NOTE_TAKER_DB=postgres
+      - NOTE_TAKER_DB_HOST=note-taker-db
+      - POSTGRES_PORT=5432
+      - FLASK_DEBUG=True
+      - PYTHONPATH=/home/apps
+      - FLASK_ENV=development
+
+volumes:
+  note-taker-db_data:
