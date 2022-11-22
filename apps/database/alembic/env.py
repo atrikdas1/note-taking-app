@@ -1,9 +1,10 @@
+import os
+import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from core import config as app_config
+from sqlalchemy import create_engine
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -11,13 +12,18 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+
+
+sys.path.append(os.path.abspath("database"))
+from database.models import Base
+
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -37,9 +43,16 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+
+    url = app_config.SQLALCHEMY_DATABASE_URI
+    section = config.config_ini_section
+    config.set_section_option(section, "USERNAME", url.username)
+    config.set_section_option(section, "PASSWORD", url.password)
+    config.set_section_option(section, "HOST", url.host)
+    config.set_section_option(section, "DATABASE", url.database)
+
     context.configure(
-        url=url,
+        url=str(url),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -56,16 +69,9 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
-
+    connectable = create_engine(app_config.SQLALCHEMY_DATABASE_URI)
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
