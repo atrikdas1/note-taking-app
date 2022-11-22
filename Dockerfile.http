@@ -33,13 +33,13 @@ ENV PYTHONPATH /home/apps
 COPY requirements/requirements.txt /
 
 # Only update these when there are new dependencies to install
-RUN python3.9 -m pip install --no-cache-dir --upgrade \
+RUN python3.10 -m pip install --no-cache-dir --upgrade \
     pip \
     setuptools \
     wheel
 
 # Finally install the dependencies, the --no-cache-dir flag saves image space
-RUN python3.9 -m pip install --no-cache-dir \
+RUN python3.10 -m pip install --no-cache-dir \
     -r /requirements.txt
 
 # Copy the source code to the container
@@ -50,5 +50,5 @@ COPY apps /home/apps
 EXPOSE 9700
 
 # Finally, run the wsgi server which creates the flask app
-CMD sh -c '/wait-for-pg.sh && python3.9 /home/apps/core/wsgi.py'
+CMD sh -c '/wait-for-pg.sh && python3.10 /home/apps/core/wsgi.py'
 
