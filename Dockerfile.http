@@ -1,0 +1,43 @@
+# Choosing this as the docker image because:
+# 1. One of the best performances among the python docker images 
+# 2. Small image size, only beaten by alpine images
+# 3. Contains latest python bugfixes
+# Reference: https://pythonspeed.com/articles/base-image-python-docker-images/
+FROM python:3.10-slim-bullseye
+
+# Install any underlying binaries and clean up artifacts to minimize image size
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip3 install --upgrade pip
+
+# Use as work directory
+WORKDIR /home/apps
+
+# Point the python path to the working directory
+ENV PYTHONPATH /home/apps
+
+# Copy requirements first to use smart layer caching and speed up build process
+COPY requirements/requirements.txt /
+
+# Only update these when there are new dependencies to install
+RUN python3.9 -m pip install --no-cache-dir --upgrade \
+    pip \
+    setuptools \
+    wheel
+
+# Finally install the dependencies, the --no-cache-dir flag saves image space
+RUN python3.9 -m pip install --no-cache-dir \
+    -r /requirements.txt
+
+# Copy the source code to the container
+COPY apps /home/apps
+
+# Public facing port
+EXPOSE 9700
+
+# Finally, run the wsgi server which creates the flask app
+CMD sh -c 'python3.9 /home/apps/core/wsgi.py'
+
