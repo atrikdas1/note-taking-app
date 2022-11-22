@@ -1,0 +1,9 @@
+flask
+flask-cors
+flask_API
+flask-SQLAlchemy
+flask-restful
+psycopg2
+SQLAlchemy
+SQLAlchemy-Json
+SQLAlchemy-Utils
