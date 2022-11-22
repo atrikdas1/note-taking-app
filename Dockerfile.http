@@ -5,6 +5,16 @@
 # Reference: https://pythonspeed.com/articles/base-image-python-docker-images/
 FROM python:3.10-slim-bullseye
 
+# Change this in production env
+ENV FLASK_DEBUG=1
+
+# Add timezone information later used to see when entries were modified in the database
+ARG timezone
+ENV TZ=${timezone}
+
+RUN apt-get install -y tzdata && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Install any underlying binaries and clean up artifacts to minimize image size
 RUN apt-get update && apt-get install -y \
     build-essential \
