@@ -2,6 +2,7 @@
 This file creates the Flask application with the appropriate configurations
 """
 from core.db import db
+from core import config
 from flask import Flask
 
 
@@ -19,7 +20,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # configure the Postgres database, relative to the app instance folder
-    app.config["SQLALCHEMY_DATABASE_URI"] = "placeholder_uri"
+    app.config["SQLALCHEMY_DATABASE_URI"] = config.SQLALCHEMY_DATABASE_URI
 
     # Initialize the database
     db.init_app(app)

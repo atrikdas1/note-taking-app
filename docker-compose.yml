@@ -26,7 +26,7 @@ services:
       - TESTING=1
       - NOTE_TAKER_DB_USER=postgres
       - NOTE_TAKER_DB_PASSWORD=postgres
-      - NOTE_TAKER_DB=postgres
+      - NOTE_TAKER_DB=note-taker
       - NOTE_TAKER_DB_HOST=note-taker-db
       - POSTGRES_PORT=5432
       - FLASK_DEBUG=True
