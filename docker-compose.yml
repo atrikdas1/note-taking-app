@@ -21,7 +21,6 @@ services:
       - note-taker-db
     ports:
       - "9700:9700"
-      - "9800:9800"
     environment:
       - TESTING=1
       - NOTE_TAKER_DB_USER=postgres

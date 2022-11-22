@@ -43,11 +43,12 @@ RUN python3.9 -m pip install --no-cache-dir \
     -r /requirements.txt
 
 # Copy the source code to the container
+COPY shell-scripts/wait-for-pg.sh /
 COPY apps /home/apps
 
 # Public facing port
 EXPOSE 9700
 
 # Finally, run the wsgi server which creates the flask app
-CMD sh -c 'python3.9 /home/apps/core/wsgi.py'
+CMD sh -c '/wait-for-pg.sh && python3.9 /home/apps/core/wsgi.py'
 

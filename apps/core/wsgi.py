@@ -60,7 +60,7 @@ if __name__ == "__main__":
         "print_config": True,
         "check_config": True,
         "worker_class": "gevent",  # asynchronous workers based on greenlets
-        "bind": ["0.0.0.0:9700", "0.0.0.0:9800"],
+        "bind": ["0.0.0.0:9700"],
         "workers": number_of_workers(),
         "timeout": 300,
     }
