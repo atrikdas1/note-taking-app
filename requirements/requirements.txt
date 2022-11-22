@@ -1,6 +1,7 @@
 # Latest versions (Nov 2022) of all libraries, good practice to also include version
 # as without version, docker would install the latest versions which might break code
 
+alembic==1.6.5
 Flask==2.0.1
 Flask-Cors==3.0.10
 Flask_API==2.0
