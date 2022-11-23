@@ -4,6 +4,7 @@ This file creates the Flask application with the appropriate configurations
 from core.db import db
 from core import config
 from flask import Flask
+from notes_api.views import notes_bp
 
 
 def create_app():
@@ -24,5 +25,8 @@ def create_app():
 
     # Initialize the database
     db.init_app(app)
+
+    # Register the flask api blueprints
+    app.register_blueprint(notes_bp, url_prefix=f"/{config.CURRENT_VERSION_API}/")
 
     return app
