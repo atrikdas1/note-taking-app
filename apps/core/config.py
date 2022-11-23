@@ -41,3 +41,7 @@ LOG_CONFIG = {
         }
     },
 }
+
+RAND_USER_GEN_URL = "https://randomuser.me/api"
+
+RAND_CHUCK_NORRIS_JOKE_URL = "https://api.chucknorris.io/jokes/random"

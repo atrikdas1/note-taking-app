@@ -1,12 +1,14 @@
 """Logic for RESTFUL APIs of notes"""
 
 import logging
+import requests
 
 from notes_api import models
 from notes_api import query
 from notes_api.schemas import NoteSchema
 from core import utils as apputils
 from core.db import db
+from core import config
 from flask import jsonify, make_response, request
 from flask_restful import Resource
 from marshmallow import ValidationError
@@ -193,4 +195,64 @@ class Note(Resource):
                 return apputils.custom_abort(response_code, "Internal Server Error", f"Deleting note {id} failed")
         except Exception as e:
             logger.exception(f"Note.delete(): internal server error. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "")
+
+class FunnyNote(Resource):
+    """
+    Create a funny note based on two APIs.
+    """
+
+    def post(self):
+        # Call the random user generator API and store the first and last names
+        try:
+            res = requests.get(config.RAND_USER_GEN_URL)
+            if res.ok:
+                data = res.json()
+                logger.debug(f"data: {data}")
+                first_name = str(data["results"][0]["name"]["first"])
+                last_name = str(data["results"][0]["name"]["last"])
+            else:
+                logger.debug(f"[NOT SUCCEED] Error: {res.json()}")
+        except Exception as e:
+            logger.exception(f"Random user generation failed. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "Random user generation failed")
+
+        # Call the random Chuck Norris joke API and replace it with the saved user name
+        try:
+            res = requests.get(config.RAND_CHUCK_NORRIS_JOKE_URL)
+            if res.ok:
+                data = res.json()
+                logger.debug(f"data: {data}")
+                joke = str(data["value"])
+                first_name_replaced = joke.replace("Chuck", first_name)
+                personalized_joke = first_name_replaced.replace("Norris", last_name)
+            else:
+                logger.debug(f"[NOT SUCCEED] Error: {res.json()}")
+        except Exception as e:
+            logger.exception(f"Random joke generation failed. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "Random joke generation failed")
+
+        # Creating a new note
+        try:
+            new_note = models.Note(
+                content=personalized_joke,
+                tags=["funny"],
+            )
+            db.session.add(new_note)
+            db.session.flush()
+
+            logger.debug(f"new_note.id: {new_note.id}")
+
+            response_code, response_msg, note_list = query.filter_notes_by_id(new_note.id)
+            if note_list is None:
+                return apputils.custom_abort(response_code, "Internal Server Error", "")
+            if len(note_list) == 0:
+                return apputils.custom_abort(404, "Not Found", "")
+            result = note_list[0]
+            logger.info(f"FunnyNote.post(): Created new note. Details: {result}")
+            db.session.commit()
+
+            return make_response(jsonify(result), 201)
+        except Exception as e:
+            logger.exception(f"FunnyNote.post(): Internal Server Error. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "")
