@@ -49,9 +49,36 @@ def filter_all_notes() -> Tuple[int, str, List]:
             notes_list,
         )
     except Exception as e:
-        err_msg = f"Database not found"
+        err_msg = f"filter_all_notes failed. Errors: {e}"
         logger.exception(e)
         return (500, err_msg, None)
+
+
+def filter_notes_by_tag(tag: str) -> Tuple[int, str, List]:
+    try:
+        # Query all notes first
+        notes = (
+            db.session.query(Note).all()
+        )
+        notes_list = []
+
+        # Loop through them and check existence of tag
+        if len(notes) > 0:
+            for note in notes:
+                note_obj = note.serialize()
+                if tag in note_obj["tags"]:
+                    notes_list.append(note_obj)
+
+        return (
+            200,
+            None,
+            notes_list,
+        )
+    except Exception as e:
+        err_msg = f"filter_notes_by_tag failed. Errors: {e}"
+        logger.exception(e)
+        return (500, err_msg, None)
+
 
 def update_note(id: int, content: str, tags: List[str]) -> Tuple[int, str, Dict]:
     try:

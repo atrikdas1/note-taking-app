@@ -83,7 +83,7 @@ class Notes(Resource):
                 return apputils.custom_abort(response_code, "Internal Server Error", "")
             return jsonify(notes=notes_list)
         except Exception as e:
-            logger.exception(f"Notes.get(): internal server error. Errors: {e}.")
+            logger.exception(f"Notes.get(): Internal server error. Errors: {e}.")
             return apputils.custom_abort(response_code, "Internal Server Error", "")
 
 
@@ -102,7 +102,7 @@ class Notes(Resource):
             else:
                 return apputils.custom_abort(response_code, "Internal Server Error", "Delete all notes failed")
         except Exception as e:
-            logger.exception(f"Notes.delete(): internal server error. Errors: {e}.")
+            logger.exception(f"Notes.delete(): Internal server error. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "")
 
 
@@ -194,8 +194,9 @@ class Note(Resource):
             else:
                 return apputils.custom_abort(response_code, "Internal Server Error", f"Deleting note {id} failed")
         except Exception as e:
-            logger.exception(f"Note.delete(): internal server error. Errors: {e}.")
+            logger.exception(f"Note.delete(): Internal server error. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "")
+
 
 class FunnyNote(Resource):
     """
@@ -256,3 +257,20 @@ class FunnyNote(Resource):
         except Exception as e:
             logger.exception(f"FunnyNote.post(): Internal Server Error. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "")
+
+
+class Tag(Resource):
+    """
+    Get all the notes with the same tag
+    """
+
+    def get(self, tag):
+        try:
+            tag = str(tag)
+            response_code, response_msg, notes_list = query.filter_notes_by_tag(tag)
+            if notes_list is None:
+                return apputils.custom_abort(response_code, "Internal Server Error", "")
+            return jsonify(notes=notes_list)
+        except Exception as e:
+            logger.exception(f"Tag.get(): Internal server error. Errors: {e}.")
+            return apputils.custom_abort(response_code, "Internal Server Error", "")
