@@ -52,3 +52,37 @@ def filter_all_notes() -> Tuple[int, str, List]:
         err_msg = f"Database not found"
         logger.exception(e)
         return (500, err_msg, None)
+
+def update_note(id: int, content: str, tags: List[str]) -> Tuple[int, str, Dict]:
+    try:
+        # Query the db with the id to get the note which requires updating first
+        note = (
+            db.session.query(Note)
+            .filter_by(id=int(id))
+            .one_or_none()
+        )
+
+        # Change the relevant fields based on what the user wants
+        if note is None:
+            return (404, f"Note {id} not found", None)
+        if content is not None:
+            note.content = content
+        if tags is not None:
+            note.tags = tags
+
+        db.session.add(note)
+        db.session.commit()
+
+        # Get the updated note back by id
+        response_code, response_msg, notes_list = filter_notes_by_id(id)
+        if notes_list is None:
+            return (response_code, response_msg, None)
+        if len(notes_list) == 0:
+            return (404, "Not Found", None)
+        result = notes_list[0]
+        return (200, None, result)
+
+    except Exception as e:
+        err_msg = f"update_note({id}) failed: {e}"
+        logger.exception(err_msg)
+        return (500, err_msg, None)

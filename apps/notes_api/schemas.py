@@ -6,8 +6,8 @@ from core.utils import must_not_be_blank
 from marshmallow import Schema, fields, validate
 
 
-class CreateNoteSchema(Schema):
-    """Validate request to create a note"""
+class NoteSchema(Schema):
+    """Validate request to create/update a note"""
 
     content = fields.String(required=True, validate=must_not_be_blank)
     

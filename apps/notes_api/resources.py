@@ -4,7 +4,7 @@ import logging
 
 from notes_api import models
 from notes_api import query
-from notes_api.schemas import CreateNoteSchema
+from notes_api.schemas import NoteSchema
 from core import utils as apputils
 from core.db import db
 from flask import jsonify, make_response, request
@@ -32,10 +32,10 @@ class Notes(Resource):
             logger.exception(f"{e}:{msg}")
             return apputils.custom_abort(400, "Bad Request", msg)
 
-        # Validate CreateNoteSchema request json
+        # Validate NoteSchema request json
         try:
-            logger.debug(f"CreateNoteSchema json_data: {json_data}")
-            template_schema = CreateNoteSchema()
+            logger.debug(f"NoteSchema json_data: {json_data}")
+            template_schema = NoteSchema()
             data = template_schema.load(json_data)
         except ValidationError as err:
             logger.warning(
@@ -72,6 +72,7 @@ class Notes(Resource):
             logger.exception(f"Notes.post(): Internal Server Error. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "")
 
+
     def get(self):
         """Get all the notes stored in the system"""
         try:
@@ -82,6 +83,7 @@ class Notes(Resource):
         except Exception as e:
             logger.exception(f"Notes.get(): internal server error. Errors: {e}.")
             return apputils.custom_abort(response_code, "Internal Server Error", "")
+
 
     def delete(self):
         """Delete all the notes stored in the system"""
@@ -99,4 +101,96 @@ class Notes(Resource):
                 return apputils.custom_abort(response_code, "Internal Server Error", "Delete all notes failed")
         except Exception as e:
             logger.exception(f"Notes.delete(): internal server error. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "")
+
+
+class Note(Resource):
+    """
+    Handle the following requests:
+    1. GET Get a note stored in the system
+    2. PUT Update a note
+    3. DELETE Delete a note
+    """
+
+    def get(self, id):
+        """Get a note"""
+        try:
+            response_code, response_message, notes_list = query.filter_notes_by_id(id)
+            if notes_list is None:
+                return apputils.custom_abort(response_code, "Internal Server Error", "")
+            if len(notes_list) == 0:
+                return apputils.custom_abort_with_id(404, f"Note with ID {id} not found", id)
+            return jsonify(notes_list[0])
+        except Exception as e:
+            logger.exception(f"Note.get(): Internal server error. Errors: {e}.")
+            return apputils.custom_abort(response_code, "Internal Server Error", "")
+
+
+    def put(self, id):
+        """Update a note"""
+        try:
+            json_data = request.get_json()
+        except Exception:
+            msg = "Notes.put(): No JSON payload found."
+            logger.warning(msg)
+            return apputils.custom_abort(400, "Bad Request", msg)
+
+        # Validate NoteSchema request json
+        try:
+            template_schema = NoteSchema()
+            data = template_schema.load(json_data)
+        except ValidationError as err:
+            logger.warning(
+                f"Note.put(): request with invalid data.\n"
+                f"Details: {json_data}\n"
+                f"Errors: {err.messages}\n"
+            )
+            return apputils.custom_abort(
+                400,
+                "Bad Request",
+                f"Please correct the highlighted errors and try again: {err.messages}",
+            )
+
+        logger.debug(f"Validated data: {data}")
+
+        try:
+            response_code, response_msg, new_note = query.update_note(
+                int(id),
+                data.get("content", None),
+                data.get("tags", None),
+            )
+            if new_note is None:
+                return apputils.custom_abort_with_id(404, f"Note with ID {id} not found", id)
+            logger.info(f"Updated note: {new_note}")
+
+            return jsonify(new_note)
+        except Exception as e:
+            logger.exception(f"Note.put(): Internal server error. Errors: {e}.")
+            return apputils.custom_abort(response_code, "Internal Server Error", "")
+
+
+    def delete(self, id):
+        """Delete all the notes stored in the system"""
+        try:
+            # Query the required note first by id
+            note = (
+                db.session.query(models.Note)
+                .filter_by(id=int(id))
+                .one_or_none()
+            )
+            if note is None:
+                return apputils.custom_abort_with_id(404, f"Note with ID {id} not found", id)
+
+            # If found, delete it
+            db.session.delete(note)
+            db.session.commit()
+
+            # Check if an empty array is returned when queried again
+            response_code, response_msg, notes_list = query.filter_notes_by_id(id)
+            if notes_list==[]:
+                return make_response(jsonify(notes_list), 204)
+            else:
+                return apputils.custom_abort(response_code, "Internal Server Error", f"Deleting note {id} failed")
+        except Exception as e:
+            logger.exception(f"Note.delete(): internal server error. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "")
