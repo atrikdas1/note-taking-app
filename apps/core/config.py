@@ -3,6 +3,7 @@ This file contains all the constants which can be configured according to the us
 """
 
 import sqlalchemy
+import logging
 
 CURRENT_VERSION_API = "v1"
 
@@ -14,3 +15,29 @@ SQLALCHEMY_DATABASE_URI = sqlalchemy.engine.url.URL.create(
     port=5432,
     database="postgres",
 )
+
+LOG_CONFIG = {
+    "version": 1,
+    "formatters": {
+        "default": {
+            "format": (
+                "%(asctime)s %(levelname)-8s [MOD %(module)s:LNE"
+                "%(lineno)d:FUN %(funcName)s: PID %(process)d: TID %(thread)d] %(message)s"
+            )
+        }
+    },
+    "handlers": {
+        "default": {
+            "class": "logging.StreamHandler",
+            "stream": "ext://sys.stdout",
+            "formatter": "default",
+        }
+    },
+    "loggers": {
+        "NOTES_API": {
+            "level": logging.DEBUG,
+            "handlers": ["default"],
+            "propagate": True,
+        }
+    },
+}

@@ -1,10 +1,15 @@
 """
 This file creates the Flask application with the appropriate configurations
 """
+import logging
+import logging.config
 from core.db import db
 from core import config
 from flask import Flask
 from notes_api.views import notes_bp
+
+logging.config.dictConfig(config.LOG_CONFIG)
+logger = logging.getLogger(f"NOTES_API.{__name__}")
 
 
 def create_app():
