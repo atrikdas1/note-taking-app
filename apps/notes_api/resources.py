@@ -71,3 +71,32 @@ class Notes(Resource):
         except Exception as e:
             logger.exception(f"Notes.post(): Internal Server Error. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "")
+
+    def get(self):
+        """Get all the notes stored in the system"""
+        try:
+            response_code, response_msg, notes_list = query.filter_all_notes()
+            if notes_list is None:
+                return apputils.custom_abort(response_code, "Internal Server Error", "")
+            return jsonify(notes=notes_list)
+        except Exception as e:
+            logger.exception(f"Notes.get(): internal server error. Errors: {e}.")
+            return apputils.custom_abort(response_code, "Internal Server Error", "")
+
+    def delete(self):
+        """Delete all the notes stored in the system"""
+        try:
+            # Delete all rows in the table
+            num_rows_deleted = db.session.query(models.Note).delete()
+            logger.debug(f"Successfully deleted {num_rows_deleted} notes")
+            db.session.commit()
+
+            # Check if an empty array is returned when queried again
+            response_code, response_msg, notes_list = query.filter_all_notes()
+            if notes_list==[]:
+                return make_response(jsonify(notes_list), 204)
+            else:
+                return apputils.custom_abort(response_code, "Internal Server Error", "Delete all notes failed")
+        except Exception as e:
+            logger.exception(f"Notes.delete(): internal server error. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "")
