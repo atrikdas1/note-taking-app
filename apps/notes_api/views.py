@@ -1,4 +1,4 @@
-from notes_api.resources import Notes, Note, FunnyNote, Tag
+from notes_api.resources import Notes, Note, FunnyNote, Tag, Tags
 from flask import Blueprint
 from flask_restful import Api
 
@@ -10,3 +10,4 @@ api.add_resource(Notes, "/note")
 api.add_resource(Note, "/note/<id>")
 api.add_resource(FunnyNote, "/note/funny")
 api.add_resource(Tag, "/note/tag/<tag>")
+api.add_resource(Tags, "/tags")

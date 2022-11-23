@@ -274,3 +274,19 @@ class Tag(Resource):
         except Exception as e:
             logger.exception(f"Tag.get(): Internal server error. Errors: {e}.")
             return apputils.custom_abort(response_code, "Internal Server Error", "")
+
+
+class Tags(Resource):
+    """
+    Get all the tags stored in the system
+    """
+
+    def get(self):
+        try:
+            response_code, response_msg, tags_list = query.filter_all_tags()
+            if tags_list is None:
+                return apputils.custom_abort(response_code, "Internal Server Error", "")
+            return jsonify(tags=tags_list)
+        except Exception as e:
+            logger.exception(f"Tags.get(): Internal server error. Errors: {e}.")
+            return apputils.custom_abort(response_code, "Internal Server Error", "")
