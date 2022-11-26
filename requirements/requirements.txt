@@ -15,6 +15,7 @@ requests==2.28.1
 SQLAlchemy==1.4.20
 sqlalchemy-json==0.4.0
 SQLAlchemy-Utils==0.37.8
+werkzeug==2.0.3
 
 # Used for testing
 coverage
