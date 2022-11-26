@@ -1,0 +1,56 @@
+"""
+Test DELETE /v1/note and /v1/note/{id}
+"""
+
+import json
+import logging
+import logging.config
+from notes_api.tests.fixtures import create_notes
+from core.config import LOG_CONFIG, CURRENT_VERSION_API
+from core.tests.setup_client import jwt_app, jwt_client, jwt_context
+
+logging.config.dictConfig(LOG_CONFIG)
+logger = logging.getLogger(f"NOTES_API.{__name__}")
+
+
+def test_delete_a_note_from_empty_db(jwt_client):
+    """Try to delete a note from an empty database"""
+    rsp = jwt_client.delete(
+        f"{CURRENT_VERSION_API}/note/1"
+    )
+    data = json.loads(rsp.get_data())
+    logger.warning(data)
+    assert rsp.status_code == 404
+
+
+def test_delete_a_note_from_populated_db(jwt_client, create_notes):
+    """Delete a note from a populated database"""
+    rsp = jwt_client.delete(
+        f"{CURRENT_VERSION_API}/note/1"
+    )
+
+    logger.warning(rsp.get_data())
+    assert rsp.status_code == 204
+    assert rsp.get_data() == b""
+
+
+def test_delete_notes_from_empty_db(jwt_client):
+    """Try to delete all note from an empty database"""
+    rsp = jwt_client.delete(
+        f"{CURRENT_VERSION_API}/note"
+    )
+
+    logger.warning(rsp.get_data())
+    assert rsp.status_code == 204
+    assert rsp.get_data() == b""
+
+
+def test_delete_notes_from_populated_db(jwt_client, create_notes):
+    """Try to delete all note from a populated database"""
+    rsp = jwt_client.delete(
+        f"{CURRENT_VERSION_API}/note"
+    )
+
+    logger.warning(rsp.get_data())
+    assert rsp.status_code == 204
+    assert rsp.get_data() == b""
