@@ -79,12 +79,12 @@ def create_notes(jwt_client, jwt_context):
             mock_note_2 = Note(**note_2)
             db.session.add(mock_note_2)
 
-            note_2 = note_db_entry(
+            note_3 = note_db_entry(
                 "This is yet another lame test note",
                 ["test", "lame"],
             )
-            mock_note_2 = Note(**note_2)
-            db.session.add(mock_note_2)
+            mock_note_3 = Note(**note_3)
+            db.session.add(mock_note_3)
 
             db.session.commit()
             logger.info("Generated notes")

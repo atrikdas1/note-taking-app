@@ -53,6 +53,18 @@ def test_post_note_without_JSON_payload(jwt_client):
     assert rsp.status_code == 400
 
 
+def test_post_funny_note(jwt_client):
+    """Try POST /note/funny"""
+    rsp = jwt_client.post(
+        f"{CURRENT_VERSION_API}/note/funny"
+    )
+    data = json.loads(rsp.get_data())
+    logger.warning(data)
+    assert rsp.status_code == 200
+    assert "content" in data
+    assert data["tags"] == ["funny"]
+
+
 @pytest.mark.parametrize(
     (
         "jwt_client, content, tags, invalid_key, invalid_key_value"
