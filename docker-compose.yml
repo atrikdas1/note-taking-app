@@ -22,7 +22,6 @@ services:
     ports:
       - "9700:9700"
     environment:
-      - TESTING=1
       - NOTE_TAKER_DB_USER=postgres
       - NOTE_TAKER_DB_PASSWORD=postgres
       - NOTE_TAKER_DB=postgres

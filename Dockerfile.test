@@ -53,5 +53,4 @@ EXPOSE 9700
 # Allow execution of shell scripts
 RUN chmod +x /wait-for-pg.sh
 
-# Finally, run the wsgi server which creates the flask app
-CMD sh -c '/wait-for-pg.sh && python3.9 /home/apps/core/wsgi.py'
+CMD sh -c "/wait-for-pg.sh && cd /home/apps; coverage run -m pytest -x -rA"
