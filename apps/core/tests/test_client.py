@@ -4,7 +4,7 @@ This file is used to initialize the test flask client for the unit tests
 import flask_sqlalchemy
 import pytest
 import sqlalchemy
-from utils import alembic_stamp_to_base, alembic_upgrade_to_head
+from core.utils import alembic_stamp_to_base, alembic_upgrade_to_head
 from core import config
 from core.app import create_app
 from database.models import Base
