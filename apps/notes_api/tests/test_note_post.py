@@ -60,7 +60,7 @@ def test_post_funny_note(jwt_client):
     )
     data = json.loads(rsp.get_data())
     logger.warning(data)
-    assert rsp.status_code == 200
+    assert rsp.status_code == 201
     assert "content" in data
     assert data["tags"] == ["funny"]
 
