@@ -31,5 +31,14 @@ services:
       - PYTHONPATH=/home/apps
       - FLASK_ENV=development
 
+  note-taker-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - note-taker-app
+    ports:
+      - "8080:80"
+
 volumes:
   note-taker-db_data:

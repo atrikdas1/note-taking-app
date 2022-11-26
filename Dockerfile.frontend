@@ -1,0 +1,37 @@
+# Use multi-stage docker build to speed up serving the image
+
+# Stage 1:
+# Use alpine for smaller build size
+FROM node:18-alpine as builder
+
+WORKDIR /app
+
+# Copy the files to know which node modules to install
+COPY notes-frontend/package.json .
+COPY notes-frontend/yarn.lock .
+
+# Install yarn to build the code into web servable bytecode
+RUN yarn install
+
+# Copy all the frontend code into the Docker container
+COPY notes-frontend .
+
+# Build the files
+RUN yarn build
+
+
+# Stage 2
+# We create a new image using the above image
+FROM nginx:1.22-alpine
+
+# Default folder where the HTML code is served from
+WORKDIR /usr/share/nginx/html
+
+# Remove default Nginx static resources 
+RUN rm -rf ./*
+
+# Copy the 1st stage’s static resources onto the current image 
+COPY --from=builder /app/build .
+
+# Run using nginx
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
