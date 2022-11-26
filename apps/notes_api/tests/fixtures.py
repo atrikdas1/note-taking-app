@@ -7,7 +7,7 @@ import pytest
 from notes_api.models import Note
 from core.config import LOG_CONFIG
 from core.db import db
-from core.tests.setup_client import jwt_app, jwt_client, jwt_context
+from core.tests.test_client import jwt_app, jwt_client, jwt_context
 
 logging.config.dictConfig(LOG_CONFIG)
 logger = logging.getLogger(f"NOTES_API.{__name__}")
