@@ -28,8 +28,11 @@ def put_note_pl() -> Dict:
 
 def test_update_a_note_from_empty_db(jwt_client):
     """Try to update note from an empty database"""
+    pl = put_note_pl()
     rsp = jwt_client.put(
-        f"{CURRENT_VERSION_API}/note/1"
+        f"{CURRENT_VERSION_API}/note/1",
+        data=json.dumps(pl),
+        content_type="application/json",
     )
     data = json.loads(rsp.get_data())
     logger.warning(data)
