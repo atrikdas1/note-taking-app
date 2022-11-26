@@ -115,6 +115,7 @@ def test_update_note_from_populated_db(jwt_client, create_notes):
 )
 def test_update_note_invalid_payload(
     jwt_client,
+    create_notes,
     content,
     tags,
     invalid_key,
