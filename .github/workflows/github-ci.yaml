@@ -14,5 +14,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Test with pytest
-    - run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "atrikdas1" --password-stdin
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "atrikdas1" --password-stdin
     - run: cd /home/apps; coverage run -m pytest -x -rA
