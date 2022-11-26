@@ -3,7 +3,27 @@ name: Pytest with Pipenv & Docker
 on: [push]
 jobs:
   build:
-    name: Pytest    
+    name: Pytest
+    #Add services, aka Docker containers that runs in paralell
+    services:
+      #Name the service
+      note-taker-db:
+        #Set the Docker image to use, find images on Dockerhub.com
+        image: postgres:12.3-alpine
+        # Set environment variables
+        env: 
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        # Expose ports
+        ports: 
+          - 5432:5432
+        # Add some health options to make sure PostgreSQL is running fully before moving on
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     # runs on the latest Ubuntu
     runs-on: ubuntu-latest     
     # runs within your Docker container
