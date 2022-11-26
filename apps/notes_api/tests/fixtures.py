@@ -47,7 +47,7 @@ def put_notes_payload(
     return d
 
 
-def note_db_entry(  # noqa: C901
+def note_db_entry(
     content: str,
     tags: List[str],
 ) -> Dict:
