@@ -36,9 +36,7 @@ def test_update_a_note_from_empty_db(jwt_client):
     assert rsp.status_code == 404
 
 
-def test_update_note_without_JSON_payload(
-    jwt_client, create_notes
-):  # noqa: F811
+def test_update_note_without_JSON_payload(jwt_client, create_notes):
     """Try PUT /note/{id} without JSON payload"""
     rsp = jwt_client.put(
         f"{CURRENT_VERSION_API}/note/1"
@@ -65,11 +63,12 @@ def test_update_note_from_populated_db(jwt_client, create_notes):
 
 @pytest.mark.parametrize(
     (
-        "jwt_client, content, tags, invalid_key, invalid_key_value"
+        "jwt_client, create_notes, content, tags, invalid_key, invalid_key_value"
     ),
     [
         (
             "",  # jwt_client
+            "",  # create_notes,
             None,  # content required
             [random.choice([(''.join(random.choice(string.ascii_letters) for i in range(8))) for n in range(5)])],  # tags,
             None,  # invalid_key,
@@ -77,6 +76,7 @@ def test_update_note_from_populated_db(jwt_client, create_notes):
         ),
         (
             "",  # jwt_client
+            "",  # create_notes,
             "",  # content cannot be empty string
             [random.choice([(''.join(random.choice(string.ascii_letters) for i in range(8))) for n in range(5)])],  # tags,
             None,  # invalid_key,
@@ -84,6 +84,7 @@ def test_update_note_from_populated_db(jwt_client, create_notes):
         ),
         (
             "",  # jwt_client
+            "",  # create_notes,
             ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(20)),  # content,
             None,  # tags required,
             None,  # invalid_key,
@@ -91,6 +92,7 @@ def test_update_note_from_populated_db(jwt_client, create_notes):
         ),
         (
             "",  # jwt_client
+            "",  # create_notes,
             ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(20)),  # content,
             [],  # tags cannot be empty,
             None,  # invalid_key,
@@ -98,6 +100,7 @@ def test_update_note_from_populated_db(jwt_client, create_notes):
         ),
         (
             "",  # jwt_client
+            "",  # create_notes,
             ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(20)),  # content,
             [random.choice([(''.join(random.choice(string.ascii_letters) for i in range(8))) for n in range(5)])],  # tags,
             "".join(
