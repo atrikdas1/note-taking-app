@@ -220,13 +220,11 @@ class FunnyNote(Resource):
 
         # Call the random Chuck Norris joke API and replace it with the saved user name
         try:
-            res = requests.get(config.RAND_CHUCK_NORRIS_JOKE_URL)
+            res = requests.get(config.RAND_CHUCK_NORRIS_JOKE_URL, params={'name': f"{first_name} {last_name}"})
             if res.ok:
                 data = res.json()
                 logger.debug(f"data: {data}")
                 joke = str(data["value"])
-                first_name_replaced = joke.replace("Chuck", first_name)
-                personalized_joke = first_name_replaced.replace("Norris", last_name)
             else:
                 logger.debug(f"[NOT SUCCEED] Error: {res.json()}")
         except Exception as e:
@@ -236,7 +234,7 @@ class FunnyNote(Resource):
         # Creating a new note
         try:
             new_note = models.Note(
-                content=personalized_joke,
+                content=joke,
                 tags=["funny"],
             )
             db.session.add(new_note)
