@@ -13,7 +13,6 @@ jobs:
     # and runs pytest in your pipenv environment
     steps:
     - uses: actions/checkout@v2
-    - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "atrikdas1" --password-stdin
     - name: Test with pytest
       run: cd /home/apps; coverage run -m pytest -x -rA
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "atrikdas1" --password-stdin
