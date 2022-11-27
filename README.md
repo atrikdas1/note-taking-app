@@ -12,10 +12,10 @@
 
 ![How the database looks](./images/notes-db.png)
 
-3) Extra features have been built in the frontend such as:
-a. **'Create a Funny Note'** which calls 2 external APIs and posts a joke
-b. **Form validation** on the frontend and backend to handle errors better
-c. **Filter** all notes by clicking on an active tag
+3) Extra features have been built in the frontend such as:  
+a. **'Create a Funny Note'** which calls 2 external APIs and posts a joke  
+b. **Form validation** on the frontend and backend to handle errors better  
+c. **Filter** all notes by clicking on an active tag  
 
 ![Filter notes by tag](./images/notes-filter.png)
 
