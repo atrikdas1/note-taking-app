@@ -29,13 +29,17 @@ function Form(props) {
     return (
         <div>
             {props.note ? (
-                <div className="mb-3">
-                    <label htmlFor='content' className='form-label'>Content</label>
-                    <textarea onChange={(e) => setContent(e.target.value)} rows='5' value={content} className='form-control' placeholder='Please enter content'/>
+                <div className="mb-3 card-light">
+                    <div>
+                        <label htmlFor='content' className='form-label'>Content</label>
+                        <textarea onChange={(e) => setContent(e.target.value)} rows='5' value={content} className='form-control' placeholder='Please enter content'/>
+                    </div>
 
-                    <label htmlFor='tags' className='form-label'>Tags</label>
-                    <input onChange={(e) => setTags(e.target.value)} value={tags} type="text" className='form-control' placeholder='Please enter tags'/>
-
+                    <div>
+                        <label htmlFor='tags' className='form-label'>Tags</label>
+                        <input onChange={(e) => setTags(e.target.value)} value={tags} type="text" className='form-control' placeholder='Please enter tags'/>
+                    </div>
+                    
                     {
                         props.note.id ? 
                         <div className='row'>

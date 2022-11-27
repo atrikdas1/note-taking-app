@@ -12,3 +12,42 @@ div{
   display: flex;
   justify-content: center;
 }
+
+.section{
+  color: #111;
+  box-sizing:border-box;
+  margin:0;
+  border:0.5px;
+  border-radius:0.5px;
+  border-bottom:.0625rem solid #ddd;
+  width:100%
+}
+
+.card{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-self:center;
+  position:relative;
+  width:100%;
+  color: #111;
+  border:.0625rem solid #ddd;
+  border-radius:.125rem;
+  margin:.5rem;
+  overflow:hidden
+}
+
+.card-light{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-self:center;
+  position:relative;
+  width:100%;
+  background-color: #e0e0e0;
+  color: #111;
+  border:.0625rem solid #ddd;
+  border-radius:.125rem;
+  margin:.5rem;
+  overflow:hidden
+}
