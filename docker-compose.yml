@@ -46,6 +46,7 @@ services:
     networks:
       - notes-net
 
+# Create a network so that backend and frontend services can interface with each other
 networks:
   notes-net:
 volumes:

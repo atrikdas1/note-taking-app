@@ -53,4 +53,5 @@ EXPOSE 9700
 # Allow execution of shell scripts
 RUN chmod +x /wait-for-pg.sh
 
+# Run pytest coverage which runs every function appended with test_
 CMD sh -c "/wait-for-pg.sh && cd /home/apps; coverage run -m pytest -x -rA"

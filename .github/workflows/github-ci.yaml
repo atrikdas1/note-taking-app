@@ -1,4 +1,4 @@
-name: Pytest with Pipenv & Docker
+name: Test Backend APIs with Pytest
 # workflow triggered by any push on any branch
 on: [push]
 jobs:

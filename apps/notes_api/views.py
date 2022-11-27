@@ -1,3 +1,6 @@
+"""
+This file contains the various possible APIs supported
+"""
 from notes_api.resources import Notes, Note, FunnyNote, Tag, Tags
 from flask import Blueprint
 from flask_restful import Api

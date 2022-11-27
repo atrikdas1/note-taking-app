@@ -31,7 +31,7 @@ class Note(Base):
     )
 
     def serialize(self):
-        """Create dictionary containing Note info."""
+        """Create dictionary containing Note info"""
         out = dict()
         out["id"] = int(self.id)
         out["content"] = str(self.content)

@@ -1,3 +1,6 @@
+"""
+This file contains helper functions used throughout the other files
+"""
 import os
 from alembic.command import upgrade, stamp
 from alembic.config import Config
