@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import NoteList from "./components/NoteList";
 import Form from "./components/Form";
+import APIService from "./components/APIService";
 
 function App() {
 	// usestate for setting a javascript
@@ -38,11 +39,13 @@ function App() {
       }
     })
     setNotes(new_note)
+    setEditedNote({content:'', tags:''})
   }
 
   const createdData = (note) => {
     const new_notes = [...notes, note]
     setNotes(new_notes)
+    setEditedNote({content:'', tags:''})
   }
 
   const deleteNote = (note) => {
@@ -56,11 +59,33 @@ function App() {
     setNotes(new_notes)
   }
 
+  const funnyNote = () => {
+    APIService.FunnyNote()
+    .then(resp => {
+      const new_notes = [...notes, resp]
+      setNotes(new_notes)})
+    .catch(error => console.log(error))
+  }
+
+  const deleteAll = () => {
+    APIService.DeleteAll()
+    .then(() => setNotes([]))
+    .catch(error => console.log(error))
+  }
+
 	return (
 		<div className="App">
       <div className="row">
-        <div className="col">
+        <div className="col-6">
           <h1>Note Taking App</h1>
+        </div>
+        <div className='col-2'>
+            <button className='btn btn-success'
+            onClick={funnyNote}>Create Funny Note</button>
+        </div>
+        <div className='col-2'>
+            <button className='btn btn-danger'
+            onClick={deleteAll}>Delete All</button>
         </div>
       </div>
 			

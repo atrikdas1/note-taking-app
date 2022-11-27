@@ -37,4 +37,23 @@ export default class APIService{
             },
           })
     }
+
+    static DeleteAll(){
+        return fetch('/v1/note', {
+            'method':'DELETE',
+            headers: {
+              'Content-Type':'application/json'
+            },
+          })
+    }
+
+    static FunnyNote(){
+        return fetch('/v1/note/funny', {
+            'method':'POST',
+            headers: {
+              'Content-Type':'application/json'
+            },
+          })
+          .then(resp => resp.json())
+    }
 }
