@@ -7,6 +7,7 @@ function Form(props) {
     const [tags, setTags] = useState(props.note.tags);
     const [showAlert, setShowAlert] = useState(false);
 
+    // Switch to create form if clicked cancel
     const openForm = () => {
         props.setEditedNote({content:'', tags:''})
     }
@@ -16,6 +17,7 @@ function Form(props) {
         setTags(props.note.tags)
     }, [props.note])
 
+    // If required fields are empty, display alert. Else, call API to update note
     const updateNote = () => {   
         if (content == "" || tags == ""){
             setShowAlert(true)
@@ -26,6 +28,7 @@ function Form(props) {
         }
     }
 
+    // If required fields are empty, display alert. Else, call API to create note
     const createNote = () => {
         if (content == "" || tags == ""){
             setShowAlert(true)
@@ -38,6 +41,7 @@ function Form(props) {
 
     return (
         <div>
+            {/* Only show alert if showAlert is true */}
             {
                 showAlert ?
                 <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
@@ -57,6 +61,7 @@ function Form(props) {
                         <input onChange={(e) => setTags(e.target.value)} value={tags} type="text" className='form-control' placeholder='Please enter tags separated by commas'/>
                     </div>
                     
+                    {/* Change buttons from Create to Update based on if note ID is passed as a prop */}
                     {
                         props.note.id ? 
                         <div className='row'>

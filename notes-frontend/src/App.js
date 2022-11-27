@@ -1,4 +1,3 @@
-// Importing modules
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import NoteList from "./components/NoteList";
@@ -12,7 +11,7 @@ function App() {
   const [editedNote, setEditedNote] = useState(null);
   const [isFilter, setIsFilter] = useState(false);
 
-	// Using useEffect for single rendering
+	// Using useEffect for first time rendering notes onto view
 	useEffect(() => {
 		// Using fetch to fetch the api from
 		// flask server it will be redirected to proxy
@@ -31,6 +30,7 @@ function App() {
     setEditedNote(note)
   }
 
+  // Set view after updating selected note
   const updatedData = (note) => {
     const new_note = notes.map(my_note => {
       if (my_note.id === note.id) {
@@ -43,17 +43,20 @@ function App() {
     setEditedNote({content:'', tags:''})
   }
 
+  // Set view after adding new note to the end of feed
   const createdData = (note) => {
     const new_notes = [...notes, note]
     setNotes(new_notes)
     setEditedNote({content:'', tags:''})
   }
 
+  // Set view to show notes based on selected tag
   const filterByTag = (filtered_notes) => {
     setNotes(filtered_notes)
     setIsFilter(true)
   }
 
+  // Remove selected note from view
   const deleteNote = (note) => {
     const new_notes = notes.filter(my_note => {
       if (my_note.id === note.id) {
@@ -65,6 +68,7 @@ function App() {
     setNotes(new_notes)
   }
 
+  // Call API to generate a funny note
   const funnyNote = () => {
     APIService.FunnyNote()
     .then(resp => {
@@ -73,12 +77,14 @@ function App() {
     .catch(error => console.log(error))
   }
 
+  // Call API to delete all notes
   const deleteAll = () => {
     APIService.DeleteAll()
     .then(() => setNotes([]))
     .catch(error => console.log(error))
   }
 
+  // Call API to get all notes
   const getAll = () => {
     APIService.GetAll()
     .then(resp => {
@@ -101,6 +107,7 @@ function App() {
             <button className='btn btn-danger'
             onClick={deleteAll}>Delete All</button>
         </div>
+        {/* Display Reset Filter button only when tag is clicked */}
         {
           isFilter ? 
           <div className='col-2 centre'>
@@ -112,6 +119,7 @@ function App() {
 			
       <div className="row">
         <div className="col-md-6">
+          {/* Display Update form only if setEditedNote is filled up, else display Create form */}
           {editedNote ? <Form note={editedNote} updatedData={updatedData} createdData={createdData} setEditedNote={setEditedNote}/>
           : setEditedNote({content:'', tags:''})}
         </div>

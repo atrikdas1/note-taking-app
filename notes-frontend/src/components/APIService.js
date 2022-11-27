@@ -1,3 +1,4 @@
+// This file interfaces with the backend via a proxy to receive all the responses from the backend
 export default class APIService{
     static GetAll(){
         return fetch('/v1/note', {

@@ -22,6 +22,7 @@ function NoteList(props) {
 
   return (
     <div>
+        {/* Populate feed with notes if they exist */}
         {props.notes && props.notes.map(note => {
         return(
           <div key = {note.id}>
@@ -29,6 +30,7 @@ function NoteList(props) {
                 <div className="section">
                     <p>{note.content}</p>
                 </div>
+                {/* Populate div with individual tags from an array */}
                 <div className="section">
                     {note.tags.map((tag, index) => <Badge pill onClick={() => filterTag(tag)} style={{marginRight:"5px", cursor:"pointer"}} key={index} bg="primary">{tag}</Badge>)}
                 </div>
