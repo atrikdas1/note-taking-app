@@ -45,8 +45,15 @@ function App() {
     setNotes(new_notes)
   }
 
-  const openForm = () => {
-    setEditedNote({content:'', tags:''})
+  const deleteNote = (note) => {
+    const new_notes = notes.filter(my_note => {
+      if (my_note.id === note.id) {
+        return false
+      } else {
+        return true
+      }
+    })
+    setNotes(new_notes)
   }
 
 	return (
@@ -55,14 +62,17 @@ function App() {
         <div className="col">
           <h1>Note Taking App</h1>
         </div>
-        <div className="col">
-          <button className="btn btn-success" onClick={openForm}>Insert Note</button>
-        </div>
       </div>
 			
-        <NoteList notes={notes} editNote={editNote}/>
-        {editedNote ? <Form note={editedNote} updatedData={updatedData} createdData={createdData}/> : null}
-        
+      <div className="row">
+        <div className="col-md-6">
+          {editedNote ? <Form note={editedNote} updatedData={updatedData} createdData={createdData} setEditedNote={setEditedNote}/>
+          : setEditedNote({content:'', tags:''})}
+        </div>
+        <div className="col-md-6">
+          <NoteList notes={notes} editNote={editNote} deleteNote={deleteNote}/>
+        </div>        
+      </div>
 		</div>
 	);
 }

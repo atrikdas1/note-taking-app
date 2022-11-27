@@ -5,6 +5,10 @@ function Form(props) {
     const [content, setContent] = useState(props.note.content);
     const [tags, setTags] = useState(props.note.tags);
 
+    const openForm = () => {
+        props.setEditedNote({content:'', tags:''})
+    }
+
     useEffect(() => {
         setContent(props.note.content)
         setTags(props.note.tags)
@@ -33,8 +37,21 @@ function Form(props) {
                     <input onChange={(e) => setTags(e.target.value)} value={tags} type="text" className='form-control' placeholder='Please enter tags'/>
 
                     {
-                        props.note.id ? <button onClick={updateNote} className='btn btn-success mt-3'>Update</button>
-                        : <button onClick={createNote} className='btn btn-success mt-3'>Create</button>
+                        props.note.id ? 
+                        <div className='row'>
+                            <div className='col-2'>
+                                <button onClick={updateNote} className='btn btn-success mt-3'>Update</button>
+                            </div>
+                            <div className='col-2'>
+                                <button onClick={openForm} className='btn btn-danger mt-3'>Cancel</button>
+                            </div>
+                        </div>
+                        : 
+                        <div className='row'>
+                            <div className='col-2'>
+                                <button onClick={createNote} className='btn btn-success mt-3'>Create</button>
+                            </div>
+                        </div>
                     }
                 </div>
             ):null

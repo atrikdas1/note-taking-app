@@ -28,4 +28,13 @@ export default class APIService{
           })
           .then(resp => resp.json())
     }
+
+    static DeleteNote(id){
+        return fetch(`/v1/note/${id}`, {
+            'method':'DELETE',
+            headers: {
+              'Content-Type':'application/json'
+            },
+          })
+    }
 }
