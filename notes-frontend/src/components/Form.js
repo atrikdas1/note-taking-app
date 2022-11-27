@@ -9,9 +9,16 @@ function Form(props) {
         setContent(props.note.content)
         setTags(props.note.tags)
     }, [props.note])
+
     const updateNote = () => {
         APIService.UpdateNote(props.note.id, {content, tags})
         .then(resp => props.updatedData(resp))
+        .catch(error => console.log(error))
+    }
+
+    const createNote = () => {
+        APIService.CreateNote({content, tags})
+        .then(resp => props.createdData(resp))
         .catch(error => console.log(error))
     }
 
@@ -25,7 +32,10 @@ function Form(props) {
                     <label htmlFor='tags' className='form-label'>Tags</label>
                     <input onChange={(e) => setTags(e.target.value)} value={tags} type="text" className='form-control' placeholder='Please enter tags'/>
 
-                    <button onClick={updateNote} className='btn btn-success mt-3'>Update</button>
+                    {
+                        props.note.id ? <button onClick={updateNote} className='btn btn-success mt-3'>Update</button>
+                        : <button onClick={createNote} className='btn btn-success mt-3'>Create</button>
+                    }
                 </div>
             ):null
             }

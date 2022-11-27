@@ -1,16 +1,25 @@
-import React from 'react'
+import React from 'react';
+import Badge from 'react-bootstrap/Badge';
 
 function NoteList(props) {
+
     const editNote = (note) => {
         props.editNote(note)
     }
+
   return (
     <div>
         {props.notes && props.notes.map(note => {
         return(
           <div key = {note.id}>
-            <p>{note.content}</p>
-            <p>{note.tags}</p>
+            <div className="card fluid">
+                <div className="section">
+                    <p>{note.content}</p>
+                </div>
+                <div className="section">
+                    {note.tags.map((tag, index) => <Badge key={index} bg="primary">{tag}</Badge>)}
+                </div>
+            </div>
 
             <div className='row'>
                 <div className='col-md-1'>
