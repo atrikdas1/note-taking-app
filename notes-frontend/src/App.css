@@ -8,6 +8,7 @@ div{
   padding: 10px;
 }
 
-button{
-  margin-right: 5px;
+.centre {
+  display: flex;
+  justify-content: center;
 }

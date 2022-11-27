@@ -10,6 +10,7 @@ function App() {
 	// object for storing and using data
 	const [notes, setNotes] = useState([]);
   const [editedNote, setEditedNote] = useState(null);
+  const [isFilter, setIsFilter] = useState(false);
 
 	// Using useEffect for single rendering
 	useEffect(() => {
@@ -48,6 +49,11 @@ function App() {
     setEditedNote({content:'', tags:''})
   }
 
+  const filterByTag = (filtered_notes) => {
+    setNotes(filtered_notes)
+    setIsFilter(true)
+  }
+
   const deleteNote = (note) => {
     const new_notes = notes.filter(my_note => {
       if (my_note.id === note.id) {
@@ -73,20 +79,35 @@ function App() {
     .catch(error => console.log(error))
   }
 
+  const getAll = () => {
+    APIService.GetAll()
+    .then(resp => {
+      setNotes(resp.notes)
+      setIsFilter(false)})
+    .catch(error => console.log(error))
+  }
+
 	return (
 		<div className="App">
       <div className="row">
         <div className="col-6">
           <h1>Note Taking App</h1>
         </div>
-        <div className='col-2'>
+        <div className='col-2 centre'>
             <button className='btn btn-success'
             onClick={funnyNote}>Create Funny Note</button>
         </div>
-        <div className='col-2'>
+        <div className='col-2 centre'>
             <button className='btn btn-danger'
             onClick={deleteAll}>Delete All</button>
         </div>
+        {
+          isFilter ? 
+          <div className='col-2 centre'>
+            <button className='btn btn-warning'
+            onClick={getAll}>Reset Filter</button>
+          </div> : null
+        }
       </div>
 			
       <div className="row">
@@ -95,7 +116,7 @@ function App() {
           : setEditedNote({content:'', tags:''})}
         </div>
         <div className="col-md-6">
-          <NoteList notes={notes} editNote={editNote} deleteNote={deleteNote}/>
+          <NoteList notes={notes} editNote={editNote} deleteNote={deleteNote} filterByTag={filterByTag}/>
         </div>        
       </div>
 		</div>

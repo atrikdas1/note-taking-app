@@ -14,6 +14,12 @@ function NoteList(props) {
         .catch(error => console.log(error))
     }
 
+    const filterTag = (tag) => {
+        APIService.FilterTag(tag)
+        .then(resp => props.filterByTag(resp.notes))
+        .catch(error => console.log(error))
+    }
+
   return (
     <div>
         {props.notes && props.notes.map(note => {
@@ -24,16 +30,16 @@ function NoteList(props) {
                     <p>{note.content}</p>
                 </div>
                 <div className="section">
-                    {note.tags.map((tag, index) => <Badge style={{marginRight:"5px"}} key={index} bg="primary">{tag}</Badge>)}
+                    {note.tags.map((tag, index) => <Badge pill onClick={() => filterTag(tag)} style={{marginRight:"5px"}} key={index} bg="primary">{tag}</Badge>)}
                 </div>
             </div>
 
             <div className='row'>
-                <div className='col-2'>
+                <div className='col-3 centre'>
                     <button className='btn btn-primary'
                     onClick={() => editNote(note)}>Update</button>
                 </div>
-                <div className='col-2'>
+                <div className='col-3 centre'>
                     <button className='btn btn-danger'
                     onClick={() => deleteNote(note)}>Delete</button>
                 </div>

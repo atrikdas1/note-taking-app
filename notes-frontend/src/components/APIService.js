@@ -1,4 +1,14 @@
 export default class APIService{
+    static GetAll(){
+        return fetch('/v1/note', {
+            'method':'GET',
+            headers: {
+              'Content-Type':'application/json'
+            },
+          })
+          .then(resp => resp.json())
+    }
+
     static UpdateNote(id, body){
         var tags = body.tags
         var content = body.content
@@ -50,6 +60,16 @@ export default class APIService{
     static FunnyNote(){
         return fetch('/v1/note/funny', {
             'method':'POST',
+            headers: {
+              'Content-Type':'application/json'
+            },
+          })
+          .then(resp => resp.json())
+    }
+
+    static FilterTag(tag){
+        return fetch(`/v1/note/tag/${tag}`, {
+            'method':'GET',
             headers: {
               'Content-Type':'application/json'
             },
