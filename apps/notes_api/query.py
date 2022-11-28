@@ -6,6 +6,7 @@ import logging
 from typing import Dict, List, Tuple
 from notes_api.models import Note
 from core.db import db
+from sqlalchemy import desc
 
 logger = logging.getLogger(f"NOTES_API.{__name__}")
 
@@ -36,7 +37,9 @@ def filter_notes_by_id(note_id: int) -> Tuple[int, str, List]:
 def filter_all_notes() -> Tuple[int, str, List]:
     try:
         notes = (
-            db.session.query(Note).all()
+            db.session.query(Note)
+            .order_by(Note.modified.desc())
+            .all()
         )
         notes_list = []
         if len(notes) > 0:
@@ -58,7 +61,9 @@ def filter_notes_by_tag(tag: str) -> Tuple[int, str, List]:
     try:
         # Query all notes first
         notes = (
-            db.session.query(Note).all()
+            db.session.query(Note)
+            .order_by(Note.modified.desc())
+            .all()
         )
         notes_list = []
 
@@ -84,7 +89,9 @@ def filter_notes_by_entity(entity: str) -> Tuple[int, str, List]:
     try:
         # Query all notes first
         notes = (
-            db.session.query(Note).all()
+            db.session.query(Note)
+            .order_by(Note.modified.desc())
+            .all()
         )
         notes_list = []
 
@@ -110,7 +117,9 @@ def filter_all_tags() -> Tuple[int, str, List]:
     try:
         # First query all the notes
         notes = (
-            db.session.query(Note).all()
+            db.session.query(Note)
+            .order_by(Note.modified.desc())
+            .all()
         )
         # Loop through each note and store each tag in a set to get unique tags
         tags_set = set()

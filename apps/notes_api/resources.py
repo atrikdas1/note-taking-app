@@ -87,8 +87,8 @@ class Notes(Resource):
         try:
             new_note = models.Note(
                 content=data["content"],
-                tags=data["tags"],
-                entities=entities
+                tags=[x.lower() for x in data["tags"]],  # lowercase all tags to prevent distinguishing between 'Funny' and 'funny'
+                entities=[x.lower() for x in entities],  # same reason as above
             )
             db.session.add(new_note)
             db.session.flush()
@@ -305,7 +305,7 @@ class FunnyNote(Resource):
             new_note = models.Note(
                 content=joke,
                 tags=["funny"],
-                entities=entities,
+                entities=[x.lower() for x in entities],
             )
             db.session.add(new_note)
             db.session.flush()

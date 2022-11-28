@@ -46,4 +46,6 @@ class Note(Base):
         out["content"] = str(self.content)
         out["tags"] = self.tags
         out["entities"] = self.entities
+        out["created"] = self.created
+        out["modified"] = self.modified
         return out
