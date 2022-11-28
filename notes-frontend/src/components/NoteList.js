@@ -35,13 +35,15 @@ function NoteList(props) {
                     {note.tags.map((tag, index) => <Badge pill onClick={() => filterTag(tag)} style={{marginRight:"5px", cursor:"pointer"}} key={index} bg="primary">{tag}</Badge>)}
                 </div>
                 <div className='row'>
-                    <div className='col-2 centre'>
+                    <div className='col-1 centre'>
                         <button className='btn btn-primary'
-                        onClick={() => editNote(note)}>Update</button>
+                        onClick={() => editNote(note)}><i className="fa fa-pencil-square"></i>
+                        </button>
                     </div>
-                    <div className='col-2 centre'>
+                    <div className='col-1 centre'>
                         <button className='btn btn-danger'
-                        onClick={() => deleteNote(note)}>Delete</button>
+                        onClick={() => deleteNote(note)}><i className="fa fa-trash"></i>
+                        </button>
                     </div>
                 </div>
             </div>
