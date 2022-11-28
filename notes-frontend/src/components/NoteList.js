@@ -56,7 +56,7 @@ function NoteList(props) {
                     <span><b>Tags:</b>&nbsp;&nbsp;&nbsp;{note.tags.map((tag, index) => <Badge pill onClick={() => filterTag(tag)} style={{marginRight:"5px", cursor:"pointer"}} key={index} bg="primary">{tag}</Badge>)}</span>
                 </div>
                 <div className="section">
-                  <span><b>Entities:</b>&nbsp;&nbsp;&nbsp;{note.entities.map((entity, index) => <Badge pill onClick={() => filterEntity(entity)} style={{marginRight:"5px", cursor:"pointer"}} key={index} bg="primary">{entity}</Badge>)}</span>
+                  <span><b>Auto-Tags:</b>&nbsp;&nbsp;&nbsp;{note.entities.map((entity, index) => <Badge pill onClick={() => filterEntity(entity)} style={{marginRight:"5px", cursor:"pointer"}} key={index} bg="primary">{entity}</Badge>)}</span>
                 </div>
                 <div className='row'>
                     <div className='col-1 centre'>

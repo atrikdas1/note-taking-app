@@ -47,7 +47,7 @@ function Form(props) {
             {
                 showAlert ?
                 <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
-                    Please change your input and try again.
+                    Missing Content and/or Tag values. Please change your input and try again.
                 </Alert>
                 : null
             }

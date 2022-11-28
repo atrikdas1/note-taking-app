@@ -43,6 +43,7 @@ function App() {
       setNotes(res.notes)
       setIsFilter(false)
       setEditedNote({content:'', tags:''})})
+    .then(window.scrollTo(0, 0))
     .catch(error => console.log(error))
   }
 
