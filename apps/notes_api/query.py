@@ -140,7 +140,7 @@ def filter_all_tags() -> Tuple[int, str, List]:
         return (500, err_msg, None)
 
 
-def update_note(id: int, content: str, tags: List[str]) -> Tuple[int, str, Dict]:
+def update_note(id: int, content: str, tags: List[str], entities: List[str]) -> Tuple[int, str, Dict]:
     try:
         # Query the db with the id to get the note which requires updating first
         note = (
@@ -156,6 +156,8 @@ def update_note(id: int, content: str, tags: List[str]) -> Tuple[int, str, Dict]
             note.content = content
         if tags is not None:
             note.tags = tags
+        if entities is not None:
+            note.entities = entities
 
         db.session.add(note)
         db.session.commit()

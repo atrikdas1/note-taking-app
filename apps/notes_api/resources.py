@@ -190,11 +190,46 @@ class Note(Resource):
 
         logger.debug(f"Validated data: {data}")
 
+        # Use GCP Natural Language API to do Entity Recognition
+        try:
+            # Prepare payload for the cloud API
+            payload = {
+                'encodingType': 'UTF8',
+                'document': {
+                    'type': 'PLAIN_TEXT',
+                    'content': data['content']
+                    }}
+            headers = {"Content-Type": "application/json; charset=utf-8"}
+            res = requests.post(config.GCP_API_URL, headers=headers, json=payload)
+            entities = []
+            if res.ok:
+                cloud_data = res.json()
+                logger.debug(f"cloud_data: {cloud_data}")
+                
+                if "entities" in cloud_data:
+                    # Sort the array by key=salience
+                    entities_list = cloud_data["entities"]
+                    sorted(entities_list, key = lambda x: x['salience'], reverse=True)
+                    logger.debug(f"sorted_cloud_data: {entities_list}")
+                    # Only include top 3 entities to avoid clutter in the frontend
+                    if len(entities_list) <= 3:
+                        for obj in entities_list:
+                            entities.append(obj["name"])
+                    else:
+                        entities.append(entities_list[0]["name"])
+                        entities.append(entities_list[1]["name"])
+                        entities.append(entities_list[2]["name"])
+
+        except Exception as e:
+            logger.exception(f"Note.put(): Internal Server Error. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "Error with GCP API call")
+
         try:
             response_code, response_msg, new_note = query.update_note(
                 int(id),
                 data.get("content", None),
                 data.get("tags", None),
+                entities
             )
             if new_note is None:
                 return apputils.custom_abort_with_id(404, f"Note with ID {id} not found", id)

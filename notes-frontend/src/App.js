@@ -3,6 +3,8 @@ import "./App.css";
 import NoteList from "./components/NoteList";
 import Form from "./components/Form";
 import APIService from "./components/APIService";
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
 
 function App() {
 	// usestate for setting a javascript
@@ -31,21 +33,20 @@ function App() {
   }
 
   // Set view after updating selected note
-  const updatedData = (note) => {
-    const new_note = notes.map(my_note => {
-      if (my_note.id === note.id) {
-        return note
-      } else {
-        return my_note
-      }
-    })
-    setNotes(new_note)
-    setEditedNote({content:'', tags:''})
+  const updatedData = (resp) => {
+    // Call GetAll notes here because the view is reset so that the 
+    // modified note comes on top
+    APIService.GetAll()
+    .then(res => {
+      setNotes(res.notes)
+      setIsFilter(false)
+      setEditedNote({content:'', tags:''})})
+    .catch(error => console.log(error))
   }
 
-  // Set view after adding new note to the end of feed
+  // Set view after adding new note to the start of feed
   const createdData = (note) => {
-    const new_notes = [...notes, note]
+    const new_notes = [note, ...notes]
     setNotes(new_notes)
     setEditedNote({content:'', tags:''})
   }
@@ -72,7 +73,7 @@ function App() {
   const funnyNote = () => {
     APIService.FunnyNote()
     .then(resp => {
-      const new_notes = [...notes, resp]
+      const new_notes = [resp, ...notes]
       setNotes(new_notes)})
     .catch(error => console.log(error))
   }
@@ -93,12 +94,44 @@ function App() {
     .catch(error => console.log(error))
   }
 
+
+
+  const [fixedDivWidth, setFixedDivWidth] = useState(undefined);
+  const [fixedDivTop, setFixedDivTop] = useState(undefined);
+
+  useEffect(() => {
+    const fixedDivEl = document.querySelector('.fixeddiv').getBoundingClientRect();
+    setFixedDivWidth(fixedDivEl.width);
+    setFixedDivTop(fixedDivEl.top);
+  }, []);
+
+  useEffect(() => {
+    if (!fixedDivTop) return;
+  
+    window.addEventListener('scroll', isSticky);
+    return () => {
+      window.removeEventListener('scroll', isSticky);
+    };
+  }, [fixedDivTop]);
+  
+  const isSticky = (e) => {
+    const fixedDivEl = document.querySelector('.fixeddiv');
+    const scrollTop = window.scrollY;
+    if (scrollTop >= fixedDivTop - 70) {
+      fixedDivEl.classList.add('is-sticky');
+    } else {
+      fixedDivEl.classList.remove('is-sticky');
+    }
+  }
+
 	return (
 		<div className="App">
-      <div className="row">
-        <div className="col-6">
-          <h1>Note Taking App</h1>
-        </div>
+      <Navbar bg="light" fixed="top">
+        <Container>
+            <Navbar.Brand>
+              <h2>Note Taking App</h2>
+            </Navbar.Brand>
+        </Container>
         <div className='col-2 centre'>
             <button className='btn btn-success'
             onClick={funnyNote}>Create Funny Note</button>
@@ -115,13 +148,15 @@ function App() {
             onClick={getAll}>Reset Filter</button>
           </div> : null
         }
-      </div>
+      </Navbar>
 			
       <div className="row">
         <div className="col-md-6">
-          {/* Display Update form only if setEditedNote is filled up, else display Create form */}
-          {editedNote ? <Form note={editedNote} updatedData={updatedData} createdData={createdData} setEditedNote={setEditedNote}/>
-          : setEditedNote({content:'', tags:''})}
+          <div className="fixeddiv" style={{width : fixedDivWidth}}>
+            {/* Display Update form only if setEditedNote is filled up, else display Create form */}
+            {editedNote ? <Form note={editedNote} updatedData={updatedData} createdData={createdData} setEditedNote={setEditedNote}/>
+            : setEditedNote({content:'', tags:''})}
+          </div>
         </div>
         <div className="col-md-6">
           <NoteList notes={notes} editNote={editNote} deleteNote={deleteNote} filterByTag={filterByTag}/>
