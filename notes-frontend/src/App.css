@@ -53,6 +53,7 @@ div{
   overflow:hidden
 }
 
+/* This class is dynamically added or deleted via function call */
 .is-sticky {
     position: fixed;
     top: 70px;

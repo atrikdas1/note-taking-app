@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 function NoteList(props) {
 
+    // to handle deletion from the delete modal
     const [show, setShow] = useState(false);
     const [noteToDelete, setNoteToDelete] = useState(null);
 
@@ -55,6 +56,7 @@ function NoteList(props) {
                 <div className="section">
                     <span><b>Tags:</b>&nbsp;&nbsp;&nbsp;{note.tags.map((tag, index) => <Badge pill onClick={() => filterTag(tag)} style={{marginRight:"5px", cursor:"pointer"}} key={index} bg="primary">{tag}</Badge>)}</span>
                 </div>
+                {/* Populate div with individual entities from an array */}
                 <div className="section">
                   <span><b>Auto-Tags:</b>&nbsp;&nbsp;&nbsp;{note.entities.map((entity, index) => <Badge pill onClick={() => filterEntity(entity)} style={{marginRight:"5px", cursor:"pointer"}} key={index} bg="primary">{entity}</Badge>)}</span>
                 </div>
@@ -71,6 +73,7 @@ function NoteList(props) {
                     </div>
                 </div>
             </div>
+            {/* Confirmation box shown before delete */}
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton>
                 <Modal.Title>Delete Confirmation</Modal.Title>

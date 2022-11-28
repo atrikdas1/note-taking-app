@@ -104,22 +104,23 @@ function App() {
     .catch(error => console.log(error))
   }
 
+  // To display confirmation modal
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
-
+  // To store the div's width and height
   const [fixedDivWidth, setFixedDivWidth] = useState(undefined);
   const [fixedDivTop, setFixedDivTop] = useState(undefined);
 
+  // Store the div's width and height on render
   useEffect(() => {
     const fixedDivEl = document.querySelector('.fixeddiv').getBoundingClientRect();
     setFixedDivWidth(fixedDivEl.width);
     setFixedDivTop(fixedDivEl.top);
   }, []);
 
+  // Attach an event listener to scroll operation which runs each time the fixed div's top axis changes
   useEffect(() => {
     if (!fixedDivTop) return;
   
@@ -129,6 +130,7 @@ function App() {
     };
   }, [fixedDivTop]);
   
+  // Add's pr removes sticky class which fixes the div on the screen as we scroll
   const isSticky = (e) => {
     const fixedDivEl = document.querySelector('.fixeddiv');
     const scrollTop = window.scrollY;
@@ -165,6 +167,7 @@ function App() {
         }
       </Navbar>
 
+      {/* Confirmation box before delete */}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Delete All Confirmation</Modal.Title>
