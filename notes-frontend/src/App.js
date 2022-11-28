@@ -5,6 +5,8 @@ import Form from "./components/Form";
 import APIService from "./components/APIService";
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 function App() {
 	// usestate for setting a javascript
@@ -88,6 +90,7 @@ function App() {
   const deleteAll = () => {
     APIService.DeleteAll()
     .then(() => setNotes([]))
+    .then(setShow(false))
     .catch(error => console.log(error))
   }
 
@@ -99,6 +102,11 @@ function App() {
       setIsFilter(false)})
     .catch(error => console.log(error))
   }
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
 
 
@@ -144,7 +152,7 @@ function App() {
         </div>
         <div className='col-2 centre'>
             <button className='btn btn-danger'
-            onClick={deleteAll}>Delete All</button>
+            onClick={handleShow}>Delete All</button>
         </div>
         {/* Display Reset Filter button only when tag is clicked */}
         {
@@ -155,6 +163,24 @@ function App() {
           </div> : null
         }
       </Navbar>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete All Confirmation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete all the notes in the database?
+          This action is not reversible.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={handleClose}>
+            No
+          </Button>
+          <Button variant="danger" onClick={deleteAll}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
 			
       <div className="row">
         <div className="col-md-6">
