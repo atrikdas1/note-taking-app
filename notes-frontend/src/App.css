@@ -6,6 +6,7 @@
 
 div{
   padding: 10px;
+  white-space: pre-wrap;
 }
 
 .centre {
