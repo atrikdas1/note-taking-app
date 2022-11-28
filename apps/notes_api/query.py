@@ -80,6 +80,32 @@ def filter_notes_by_tag(tag: str) -> Tuple[int, str, List]:
         return (500, err_msg, None)
 
 
+def filter_notes_by_entity(entity: str) -> Tuple[int, str, List]:
+    try:
+        # Query all notes first
+        notes = (
+            db.session.query(Note).all()
+        )
+        notes_list = []
+
+        # Loop through them and check existence of entity
+        if len(notes) > 0:
+            for note in notes:
+                note_obj = note.serialize()
+                if entity in note_obj["entities"]:
+                    notes_list.append(note_obj)
+
+        return (
+            200,
+            None,
+            notes_list,
+        )
+    except Exception as e:
+        err_msg = f"filter_notes_by_entity({entity}) failed. Errors: {e}"
+        logger.exception(e)
+        return (500, err_msg, None)
+
+
 def filter_all_tags() -> Tuple[int, str, List]:
     try:
         # First query all the notes

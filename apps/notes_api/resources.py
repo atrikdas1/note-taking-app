@@ -344,6 +344,23 @@ class Tag(Resource):
             return apputils.custom_abort(response_code, "Internal Server Error", "")
 
 
+class Entity(Resource):
+    """
+    Get all the notes with the same entity
+    """
+
+    def get(self, entity):
+        try:
+            entity = str(entity)
+            response_code, response_msg, notes_list = query.filter_notes_by_entity(entity)
+            if notes_list is None:
+                return apputils.custom_abort(response_code, "Internal Server Error", "")
+            return jsonify(notes=notes_list)
+        except Exception as e:
+            logger.exception(f"Entity.get(): Internal server error. Errors: {e}.")
+            return apputils.custom_abort(response_code, "Internal Server Error", "")
+
+
 class Tags(Resource):
     """
     Get all the tags stored in the system
