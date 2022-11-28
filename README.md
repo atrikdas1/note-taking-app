@@ -12,10 +12,10 @@
 
 ![How the database looks](./images/notes-db.png)
 
-3) Extra features have been built in the frontend such as:
-a. **'Create a Funny Note'** which calls 2 external APIs and posts a joke
-b. **Form validation** on the frontend and backend to handle errors better
-c. **Filter** all notes by clicking on an active tag
+3) Extra features have been built in the frontend such as:  
+a. **'Create a Funny Note'** which calls 2 external APIs and posts a joke  
+b. **Form validation** on the frontend and backend to handle errors better  
+c. **Filter** all notes by clicking on an active tag  
 
 ![Filter notes by tag](./images/notes-filter.png)
 
@@ -36,3 +36,4 @@ Follow the following steps to start using this application:
 2. Make sure you have the right Docker and Docker Compose versions installed, otherwise it might throw odd bugs. You don't have to install anything else since the containers will install further prerequisites automatically!
 3. Run the following step from inside the project folder: `docker-compose up -d --build`
 4. Wait for the containers to build and start. Once done, head over to `http://localhost:3000/` and you should be able to see the fully functioning application
+5. When you want to stop using the application, just tear down the containers with `docker-compose down`. If you also want to delete the database from your machine (essentially doing a 'Delete All'), just run `docker-compose down -v` to remove the volumes as well
