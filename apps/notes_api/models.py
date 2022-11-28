@@ -30,10 +30,20 @@ class Note(Base):
         server_default='["random"]',
     )
 
+    # A bonus column which holds information about various proper nouns and words of importance
+    # in the note provided by Google Cloud Platform's Natural Language API
+    entities = Column(
+        mutable_json_type(dbtype=JSONB, nested=True),
+        nullable=True,
+        comment="JSON formatted array of entities, each one is a string",
+        server_default='[]',
+    )
+
     def serialize(self):
         """Create dictionary containing Note info"""
         out = dict()
         out["id"] = int(self.id)
         out["content"] = str(self.content)
         out["tags"] = self.tags
+        out["entities"] = self.entities
         return out

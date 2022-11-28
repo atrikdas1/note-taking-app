@@ -49,11 +49,46 @@ class Notes(Resource):
                 f"Please correct the highlighted errors and try again: {err.messages}",
             )
 
+        # Use GCP Natural Language API to do Entity Recognition
+        try:
+            # Prepare payload for the cloud API
+            payload = {
+                'encodingType': 'UTF8',
+                'document': {
+                    'type': 'PLAIN_TEXT',
+                    'content': data['content']
+                    }}
+            headers = {"Content-Type": "application/json; charset=utf-8"}
+            res = requests.post(config.GCP_API_URL, headers=headers, json=payload)
+            entities = []
+            if res.ok:
+                cloud_data = res.json()
+                logger.debug(f"cloud_data: {cloud_data}")
+                
+                if "entities" in cloud_data:
+                    # Sort the array by key=salience
+                    entities_list = cloud_data["entities"]
+                    sorted(entities_list, key = lambda x: x['salience'], reverse=True)
+                    logger.debug(f"sorted_cloud_data: {entities_list}")
+                    # Only include top 3 entities to avoid clutter in the frontend
+                    if len(entities_list) <= 3:
+                        for obj in entities_list:
+                            entities.append(obj["name"])
+                    else:
+                        entities.append(entities_list[0]["name"])
+                        entities.append(entities_list[1]["name"])
+                        entities.append(entities_list[2]["name"])
+
+        except Exception as e:
+            logger.exception(f"Notes.post(): Internal Server Error. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "Error with GCP API call")
+
         # Creating a new note
         try:
             new_note = models.Note(
                 content=data["content"],
                 tags=data["tags"],
+                entities=entities
             )
             db.session.add(new_note)
             db.session.flush()
@@ -231,11 +266,46 @@ class FunnyNote(Resource):
             logger.exception(f"Random joke generation failed. Errors: {e}.")
             return apputils.custom_abort(500, "Internal Server Error", "Random joke generation failed")
 
+        # Use GCP Natural Language API to do Entity Recognition
+        try:
+            # Prepare payload for the cloud API
+            payload = {
+                'encodingType': 'UTF8',
+                'document': {
+                    'type': 'PLAIN_TEXT',
+                    'content': joke
+                    }}
+            headers = {"Content-Type": "application/json; charset=utf-8"}
+            res = requests.post(config.GCP_API_URL, headers=headers, json=payload)
+            entities = []
+            if res.ok:
+                cloud_data = res.json()
+                logger.debug(f"cloud_data: {cloud_data}")
+
+                if "entities" in cloud_data:
+                    # Sort the array by key=salience
+                    entities_list = cloud_data["entities"]
+                    sorted(entities_list, key = lambda x: x['salience'], reverse=True)
+                    logger.debug(f"sorted_cloud_data: {entities_list}")
+                    # Only include top 3 entities to avoid clutter in the frontend
+                    if len(entities_list) <= 3:
+                        for obj in entities_list:
+                            entities.append(obj["name"])
+                    else:
+                        entities.append(entities_list[0]["name"])
+                        entities.append(entities_list[1]["name"])
+                        entities.append(entities_list[2]["name"])
+
+        except Exception as e:
+            logger.exception(f"FunnyNote.post(): Internal Server Error. Errors: {e}.")
+            return apputils.custom_abort(500, "Internal Server Error", "Error with GCP API call")
+
         # Creating a new note
         try:
             new_note = models.Note(
                 content=joke,
                 tags=["funny"],
+                entities=entities,
             )
             db.session.add(new_note)
             db.session.flush()

@@ -45,3 +45,7 @@ LOG_CONFIG = {
 RAND_USER_GEN_URL = "https://randomuser.me/api"
 
 RAND_CHUCK_NORRIS_JOKE_URL = "https://api.chucknorris.io/jokes/random"
+
+GCP_API_KEY = "AIzaSyBQ5h-MLT7Bj1ASNccdlrbF_jwVlZ6Hvfs"
+
+GCP_API_URL = f"https://language.googleapis.com/v1/documents:analyzeEntities?key={GCP_API_KEY}"
