@@ -5,6 +5,7 @@ import Alert from 'react-bootstrap/Alert';
 function Form(props) {
     const [content, setContent] = useState(props.note.content);
     const [tags, setTags] = useState(props.note.tags);
+    const [entities, setEntities] = useState(props.note.entities);
     const [showAlert, setShowAlert] = useState(false);
 
     // Switch to create form if clicked cancel
@@ -15,6 +16,7 @@ function Form(props) {
     useEffect(() => {
         setContent(props.note.content)
         setTags(props.note.tags)
+        setEntities(props.note.entities)
     }, [props.note])
 
     // If required fields are empty, display alert. Else, call API to update note

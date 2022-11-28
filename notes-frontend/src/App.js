@@ -57,6 +57,12 @@ function App() {
     setIsFilter(true)
   }
 
+  // Set view to show notes based on selected entity
+  const filterByEntity = (filtered_notes) => {
+    setNotes(filtered_notes)
+    setIsFilter(true)
+  }
+
   // Remove selected note from view
   const deleteNote = (note) => {
     const new_notes = notes.filter(my_note => {
@@ -159,7 +165,7 @@ function App() {
           </div>
         </div>
         <div className="col-md-6">
-          <NoteList notes={notes} editNote={editNote} deleteNote={deleteNote} filterByTag={filterByTag}/>
+          <NoteList notes={notes} editNote={editNote} deleteNote={deleteNote} filterByTag={filterByTag} filterByEntity={filterByEntity}/>
         </div>        
       </div>
 		</div>

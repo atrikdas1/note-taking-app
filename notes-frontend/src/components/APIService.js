@@ -77,4 +77,14 @@ export default class APIService{
           })
           .then(resp => resp.json())
     }
+
+    static FilterEntity(entity){
+        return fetch(`/v1/note/entity/${entity}`, {
+            'method':'GET',
+            headers: {
+              'Content-Type':'application/json'
+            },
+          })
+          .then(resp => resp.json())
+    }
 }
